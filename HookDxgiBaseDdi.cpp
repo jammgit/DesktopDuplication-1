@@ -32,7 +32,7 @@ HRESULT __stdcall NewpfnPresent(
 
 	if (pDesktopDupHook->pOrgDxgiDdiBaseFunctions->pfnPresent)
 	{
-		OutputDebugString(TEXT(__FUNCTION__"\n"));
+		//OutputDebugString(TEXT(__FUNCTION__"\n"));
 		do
 		{
 			result = pDesktopDupHook->pOrgDxgiDdiBaseFunctions->pfnPresent(pPresentData);
@@ -112,7 +112,7 @@ HRESULT __stdcall NewpfnBlt1(
 
 	if (pDesktopDupHook->pOrgDxgiDdiBaseFunctions->pfnBlt1)
 	{
-		OutputDebugString(TEXT(__FUNCTION__"\n"));
+		//OutputDebugString(TEXT(__FUNCTION__"\n"));
 		do
 		{
 			result = pDesktopDupHook->pOrgDxgiDdiBaseFunctions->pfnBlt1(pBltData);

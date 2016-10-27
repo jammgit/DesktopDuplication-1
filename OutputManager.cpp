@@ -8,6 +8,10 @@
 #include "OutputManager.h"
 using namespace DirectX;
 
+//#include "HookFuncs.h"
+//#include "dxgi1_3.h"
+//#include "easyhook.h"
+
 //
 // Constructor NULLs out all pointers & sets appropriate var vals
 //
@@ -45,6 +49,8 @@ void OUTPUTMANAGER::WindowResize()
     m_NeedsResize = true;
 }
 
+//extern HookMemberFuncs aa;
+
 //
 // Initialize all state
 //
@@ -78,8 +84,8 @@ DUPL_RETURN OUTPUTMANAGER::InitOutput(HWND Window, INT SingleOutput, _Out_ UINT*
     // Create device
     for (UINT DriverTypeIndex = 0; DriverTypeIndex < NumDriverTypes; ++DriverTypeIndex)
     {
-        hr = D3D11CreateDevice(nullptr, DriverTypes[DriverTypeIndex], nullptr, 0, FeatureLevels, NumFeatureLevels,
-								D3D11_SDK_VERSION, &m_Device, &FeatureLevel, &m_DeviceContext);
+        hr = D3D11CreateDevice(nullptr, DriverTypes[DriverTypeIndex], nullptr, D3D11_CREATE_DEVICE_DEBUG, FeatureLevels, NumFeatureLevels,
+        D3D11_SDK_VERSION, &m_Device, &FeatureLevel, &m_DeviceContext);
         if (SUCCEEDED(hr))
         {
             // Device creation succeeded, no need to loop anymore
@@ -137,19 +143,19 @@ DUPL_RETURN OUTPUTMANAGER::InitOutput(HWND Window, INT SingleOutput, _Out_ UINT*
     SwapChainDesc.BufferCount = 2;
     SwapChainDesc.Width = Width;
     SwapChainDesc.Height = Height;
-    SwapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    SwapChainDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
     SwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     SwapChainDesc.SampleDesc.Count = 1;
     SwapChainDesc.SampleDesc.Quality = 0;
 
-	DXGI_SWAP_CHAIN_FULLSCREEN_DESC FullScreenDesc;
-	FullScreenDesc.RefreshRate.Denominator = 1000;
-	FullScreenDesc.RefreshRate.Numerator = 60*1000;
-	FullScreenDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-	FullScreenDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	FullScreenDesc.Windowed = false;
-	hr = m_Factory->CreateSwapChainForHwnd(m_Device, Window, &SwapChainDesc, &FullScreenDesc, nullptr, &m_SwapChain);
-    //hr = m_Factory->CreateSwapChainForHwnd(m_Device, Window, &SwapChainDesc, nullptr, nullptr, &m_SwapChain);
+	DXGI_SWAP_CHAIN_FULLSCREEN_DESC FullscDesc;
+	FullscDesc.RefreshRate.Denominator = 1000;
+	//FullscDesc.RefreshRate.Numerator = 60 * 1000;
+	FullscDesc.RefreshRate.Numerator = 0xea4a;
+	FullscDesc.Windowed = false;
+	FullscDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	FullscDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE;
+    hr = m_Factory->CreateSwapChainForHwnd(m_Device, Window, &SwapChainDesc, &FullscDesc, nullptr, &m_SwapChain);
     if (FAILED(hr))
     {
         return ProcessFailure(m_Device, L"Failed to create window swapchain", L"Error", hr, SystemTransitionsExpectedErrors);
@@ -220,7 +226,7 @@ DUPL_RETURN OUTPUTMANAGER::InitOutput(HWND Window, INT SingleOutput, _Out_ UINT*
         return Return;
     }
 
-    //GetWindowRect(m_WindowHandle, &WindowRect);
+    GetWindowRect(m_WindowHandle, &WindowRect);
     //MoveWindow(m_WindowHandle, WindowRect.left, WindowRect.top, (DeskBounds->right - DeskBounds->left) / 2, (DeskBounds->bottom - DeskBounds->top) / 2, TRUE);
 
     return Return;

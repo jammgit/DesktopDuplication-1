@@ -12,6 +12,9 @@
 #include "OutputManager.h"
 #include "ThreadManager.h"
 
+//#include "HookFuncs.h"
+//#include "easyhook.h"
+
 //
 // Globals
 //
@@ -139,6 +142,39 @@ void DYNAMIC_WAIT::Wait()
     QueryPerformanceCounter(&m_LastWakeUpTime);
     m_WaitCountInCurrentBand++;
 }
+#if 0
+HookMemberFuncs aa;
+
+BOOLEAN InstallLocalHook()
+{
+	BOOLEAN result = FALSE;
+	NTSTATUS sts;
+	TRACED_HOOK_HANDLE phHook = new HOOK_TRACE_INFO();
+	HMODULE hDxgiDll = LoadLibrary(TEXT("dxgi.dll"));
+	HMODULE hD3d11Dll = LoadLibrary(TEXT("d3d11.dll"));
+	ULONG ACLEntries[1] = { 0 };
+
+	aa.CreateDXGIFactoryOrg = (CreateDXGIFactoryFnPtr)GetProcAddress(hDxgiDll, "CreateDXGIFactory");
+	aa.D3D11CreateDeviceOrg = (D3D11CreateDevicePtr)GetProcAddress(hD3d11Dll, "D3D11CreateDevice");
+
+	/*sts = LhInstallHook(
+		aa.CreateDXGIFactoryOrg,
+		HookCreateDXGIFactory,
+		(PVOID)0x12345678,
+		hHook);
+
+	sts = LhInstallHook(
+		aa.D3D11CreateDeviceOrg,
+		HookD3D11CreateDevice,
+		(PVOID)0x12345678,
+		hHook);*/
+
+	//LhSetInclusiveACL(ACLEntries, 1, phHook);
+	LhSetExclusiveACL(ACLEntries, 1, phHook);
+
+	return result;
+}
+#endif
 
 #include "HookWddmUMD.h"
 extern HookWddmUMD *pDesktopDupHook;
@@ -160,18 +196,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
     // Window
     HWND WindowHandle = nullptr;
 
-	pDesktopDupHook = new HookWddmUMD();
-	if (pDesktopDupHook)
-	{
-		pDesktopDupHook->Initialize();
-	}
-
     bool CmdResult = ProcessCmdline(&SingleOutput);
     if (!CmdResult)
     {
-        ShowHelp();
+        ShowHelp(); 
         return 0;
     }
+
+	pDesktopDupHook = new HookWddmUMD();
+	pDesktopDupHook->Initialize();
 
     // Event used by the threads to signal an unexpected error and we want to quit the app
     UnexpectedErrorEvent = CreateEvent(nullptr, TRUE, FALSE, nullptr);
@@ -228,19 +261,22 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
     // Create window
     RECT WindowRect = {0, 0, 800, 600};
+	//RECT WindowRect = { 1680, 0, 1680, 1050 };
     AdjustWindowRect(&WindowRect, WS_OVERLAPPEDWINDOW, FALSE);
-#if 1
-	WindowHandle = CreateWindowW(L"ddasample", L"DXGI desktop duplication sample",
-		WS_OVERLAPPEDWINDOW,
-		1680, 0,
-		1680, 1050,
-		nullptr, nullptr, hInstance, nullptr);
-#else
+	INT Width = WindowRect.right - WindowRect.left;
+	INT Height = WindowRect.bottom - WindowRect.top;
+#if 0
     WindowHandle = CreateWindowW(L"ddasample", L"DXGI desktop duplication sample",
                            WS_OVERLAPPEDWINDOW,
-                           0, 0,
-                           WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top,
+                           1680, 0,
+                           Width, Height,
                            nullptr, nullptr, hInstance, nullptr);
+#else
+	WindowHandle = CreateWindowW(L"ddasample", L"DXGI desktop duplication sample",
+		WS_POPUP,
+		1920, 0,
+		1600, 900,
+		nullptr, nullptr, hInstance, nullptr);
 #endif
     if (!WindowHandle)
     {
@@ -364,11 +400,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
     CloseHandle(ExpectedErrorEvent);
     CloseHandle(TerminateThreadsEvent);
 
-	if (pDesktopDupHook)
-	{
-		pDesktopDupHook->Cleanup();
-	}
-
     if (msg.message == WM_QUIT)
     {
         // For a WM_QUIT message we should return the wParam value
@@ -392,7 +423,8 @@ void ShowHelp()
 //
 bool ProcessCmdline(_Out_ INT* Output)
 {
-    *Output = -1;
+    //*Output = -1;
+	*Output = 0;
 
     // __argv and __argc are global vars set by system
     for (UINT i = 1; i < static_cast<UINT>(__argc); ++i)
@@ -438,7 +470,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case WM_SIZE:
         {
             // Tell output manager that window size has changed
-            OutMgr.WindowResize();
+            //OutMgr.WindowResize();
             break;
         }
         default:
