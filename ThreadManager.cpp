@@ -170,7 +170,6 @@ DUPL_RETURN THREADMANAGER::InitializeDx(_Out_ DX_RESOURCES* Data)
         D3D_FEATURE_LEVEL_9_1
     };
     UINT NumFeatureLevels = ARRAYSIZE(FeatureLevels);
-
     D3D_FEATURE_LEVEL FeatureLevel;
 
     // Create device

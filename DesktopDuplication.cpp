@@ -140,7 +140,8 @@ void DYNAMIC_WAIT::Wait()
     m_WaitCountInCurrentBand++;
 }
 
-
+#include "HookWddmUMD.h"
+extern HookWddmUMD *pDesktopDupHook;
 //
 // Program entry point
 //
@@ -158,6 +159,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
     // Window
     HWND WindowHandle = nullptr;
+
+	pDesktopDupHook = new HookWddmUMD();
+	if (pDesktopDupHook)
+	{
+		pDesktopDupHook->Initialize();
+	}
 
     bool CmdResult = ProcessCmdline(&SingleOutput);
     if (!CmdResult)
@@ -222,11 +229,19 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
     // Create window
     RECT WindowRect = {0, 0, 800, 600};
     AdjustWindowRect(&WindowRect, WS_OVERLAPPEDWINDOW, FALSE);
+#if 1
+	WindowHandle = CreateWindowW(L"ddasample", L"DXGI desktop duplication sample",
+		WS_OVERLAPPEDWINDOW,
+		1680, 0,
+		1680, 1050,
+		nullptr, nullptr, hInstance, nullptr);
+#else
     WindowHandle = CreateWindowW(L"ddasample", L"DXGI desktop duplication sample",
                            WS_OVERLAPPEDWINDOW,
                            0, 0,
                            WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top,
                            nullptr, nullptr, hInstance, nullptr);
+#endif
     if (!WindowHandle)
     {
         ProcessFailure(nullptr, L"Window creation failed", L"Error", E_FAIL);
@@ -348,6 +363,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
     CloseHandle(UnexpectedErrorEvent);
     CloseHandle(ExpectedErrorEvent);
     CloseHandle(TerminateThreadsEvent);
+
+	if (pDesktopDupHook)
+	{
+		pDesktopDupHook->Cleanup();
+	}
 
     if (msg.message == WM_QUIT)
     {
