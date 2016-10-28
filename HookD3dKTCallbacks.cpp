@@ -15,14 +15,14 @@ __checkReturn HRESULT APIENTRY CALLBACK NewpfnAllocateCb(
 		//OutputDebugString(TEXT(__FUNCTION__"\n"));
 		do
 		{
-			result = pDesktopDupHook->pOrgKTCallbacks->pfnAllocateCb(hDevice, pData);
-			if (FAILED(result))
-				break;
-
 			if (pData->pAllocationInfo2->Flags.Primary)
 			{
 				OutputDebugString(TEXT("This could be a Primary Allocation!\n"));
 			}
+
+			result = pDesktopDupHook->pOrgKTCallbacks->pfnAllocateCb(hDevice, pData);
+			if (FAILED(result))
+				break;
 		} while (FALSE);
 	}
 

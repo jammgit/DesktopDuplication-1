@@ -149,9 +149,9 @@ DUPL_RETURN OUTPUTMANAGER::InitOutput(HWND Window, INT SingleOutput, _Out_ UINT*
     SwapChainDesc.SampleDesc.Quality = 0;
 
 	DXGI_SWAP_CHAIN_FULLSCREEN_DESC FullscDesc;
-	FullscDesc.RefreshRate.Denominator = 1000;
-	//FullscDesc.RefreshRate.Numerator = 60 * 1000;
-	FullscDesc.RefreshRate.Numerator = 0xea4a;
+	RtlZeroMemory(&FullscDesc, sizeof(DXGI_SWAP_CHAIN_FULLSCREEN_DESC));
+	FullscDesc.RefreshRate.Denominator = 1;
+	FullscDesc.RefreshRate.Numerator = 60;
 	FullscDesc.Windowed = false;
 	FullscDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 	FullscDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE;
