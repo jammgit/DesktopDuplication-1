@@ -2,6 +2,7 @@
 #include "HookWddmUMD.h"
 
 extern HookWddmUMD *pDesktopDupHook;
+extern WCHAR TempBuffer[];
 
 HRESULT NewpfnPresentCbDXGI(
 	_In_  HANDLE hDevice,
@@ -13,6 +14,8 @@ HRESULT NewpfnPresentCbDXGI(
 	if (pDesktopDupHook->pOrgDxgiBaseCallbacks->pfnPresentCb)
 	{
 		OutputDebugString(TEXT(__FUNCTION__"\n"));
+		_swprintf(TempBuffer, TEXT("\thDevice:0x%h, hContext:0x%p, DxgiContext:0x%p, srcAllocation:0x%p\n"), hDevice, pPresentData->hContext, pPresentData->pDXGIContext, pPresentData->hSrcAllocation);
+		OutputDebugString(TempBuffer);
 		do
 		{
 			result = pDesktopDupHook->pOrgDxgiBaseCallbacks->pfnPresentCb(hDevice, pPresentData);
@@ -53,6 +56,11 @@ HRESULT __stdcall NewpfnPresent1(
 	if (pDesktopDupHook->pOrgDxgiDdiBaseFunctions->pfnPresent1)
 	{
 		OutputDebugString(TEXT(__FUNCTION__"\n"));
+		for (UINT i = 0; i < pPresentData->SurfacesToPresent; i++)
+		{
+			_swprintf(TempBuffer, TEXT("\thDevice:0x%p, DxgiContext:0x%p, SurefaceToPresent:0x%p, Flag:0x%X\n"), pPresentData->hDevice, pPresentData->pDXGIContext, pPresentData->phSurfacesToPresent[i], pPresentData->Flags.Value);
+			OutputDebugString(TempBuffer);
+		}
 		do
 		{
 			result = pDesktopDupHook->pOrgDxgiDdiBaseFunctions->pfnPresent1(pPresentData);
@@ -73,6 +81,8 @@ HRESULT __stdcall NewpfnSetDisplayMode(
 	if (pDesktopDupHook->pOrgDxgiDdiBaseFunctions->pfnSetDisplayMode)
 	{
 		OutputDebugString(TEXT(__FUNCTION__"\n"));
+		_swprintf(TempBuffer, TEXT("\thDevice:0x%p, hResource:0x%p, SubIndex:0x%X\n"), pDisplayModeData->hDevice, pDisplayModeData->hResource, pDisplayModeData->SubResourceIndex);
+		OutputDebugString(TempBuffer);
 		do
 		{
 			result = pDesktopDupHook->pOrgDxgiDdiBaseFunctions->pfnSetDisplayMode(pDisplayModeData);

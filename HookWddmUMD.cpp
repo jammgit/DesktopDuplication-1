@@ -15,7 +15,7 @@ HookWddmUMD::~HookWddmUMD()
 {
 }
 
-WCHAR TempBuffer[512];
+WCHAR TempBuffer[1024];
 
 // Get user mode driver information, install easyhook, etc...
 BOOLEAN HookWddmUMD::Initialize()
