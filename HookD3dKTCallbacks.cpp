@@ -2,6 +2,7 @@
 #include "HookWddmUMD.h"
 
 extern HookWddmUMD *pDesktopDupHook;
+extern WCHAR TempBuffer[];
 
 __checkReturn HRESULT APIENTRY CALLBACK NewpfnAllocateCb(
 	_In_    HANDLE            hDevice,
@@ -17,12 +18,18 @@ __checkReturn HRESULT APIENTRY CALLBACK NewpfnAllocateCb(
 		{
 			if (pData->pAllocationInfo2->Flags.Primary)
 			{
-				OutputDebugString(TEXT("This could be a Primary Allocation!\n"));
+				OutputDebugString(TEXT("This is a Primary Allocation!\n"));
 			}
 
 			result = pDesktopDupHook->pOrgKTCallbacks->pfnAllocateCb(hDevice, pData);
 			if (FAILED(result))
 				break;
+
+			if (pData->pAllocationInfo2->Flags.Primary)
+			{
+				_swprintf(TempBuffer, TEXT("\thAllocation:0x%p, VidpnSourceId:0x%X\n"), pData->pAllocationInfo2->hAllocation, pData->pAllocationInfo2->VidPnSourceId);
+				OutputDebugString(TempBuffer);
+			}
 		} while (FALSE);
 	}
 
@@ -39,6 +46,8 @@ __checkReturn HRESULT APIENTRY CALLBACK NewpfnSetDisplayModeCb(
 	if (pDesktopDupHook->pOrgKTCallbacks->pfnSetDisplayModeCb)
 	{
 		OutputDebugString(TEXT(__FUNCTION__"\n"));
+		_swprintf(TempBuffer, TEXT("\thDevice:0x%p, hPrimaryAllocation:0x%p, PrivateAttribute:0x%X\n"), hDevice, pData->hPrimaryAllocation, pData->PrivateDriverFormatAttribute);
+		OutputDebugString(TempBuffer);
 		do
 		{
 			result = pDesktopDupHook->pOrgKTCallbacks->pfnSetDisplayModeCb(hDevice, pData);

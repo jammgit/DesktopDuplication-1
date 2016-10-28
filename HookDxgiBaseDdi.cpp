@@ -14,7 +14,7 @@ HRESULT NewpfnPresentCbDXGI(
 	if (pDesktopDupHook->pOrgDxgiBaseCallbacks->pfnPresentCb)
 	{
 		OutputDebugString(TEXT(__FUNCTION__"\n"));
-		_swprintf(TempBuffer, TEXT("\thDevice:0x%h, hContext:0x%p, DxgiContext:0x%p, srcAllocation:0x%p\n"), hDevice, pPresentData->hContext, pPresentData->pDXGIContext, pPresentData->hSrcAllocation);
+		_swprintf(TempBuffer, TEXT("\thDevice:0x%p, hContext:0x%p, DxgiContext:0x%p, srcAllocation:0x%X\n"), hDevice, pPresentData->hContext, pPresentData->pDXGIContext, pPresentData->hSrcAllocation);
 		OutputDebugString(TempBuffer);
 		do
 		{

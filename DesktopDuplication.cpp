@@ -470,7 +470,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case WM_SIZE:
         {
             // Tell output manager that window size has changed
-            OutMgr.WindowResize();
+            //OutMgr.WindowResize();
             break;
         }
         default:
