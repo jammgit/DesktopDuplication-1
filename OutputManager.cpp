@@ -81,6 +81,8 @@ DUPL_RETURN OUTPUTMANAGER::InitOutput(HWND Window, INT SingleOutput, _Out_ UINT*
     UINT NumFeatureLevels = ARRAYSIZE(FeatureLevels);
     D3D_FEATURE_LEVEL FeatureLevel;
 
+	OutputDebugString(TEXT("D3D11CreateDevice() in OUTPUTMANAGER::InitOutput()\n"));
+
     // Create device
     for (UINT DriverTypeIndex = 0; DriverTypeIndex < NumDriverTypes; ++DriverTypeIndex)
     {
@@ -155,8 +157,11 @@ DUPL_RETURN OUTPUTMANAGER::InitOutput(HWND Window, INT SingleOutput, _Out_ UINT*
 	FullscDesc.Windowed = false;
 	FullscDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 	FullscDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-    //hr = m_Factory->CreateSwapChainForHwnd(m_Device, Window, &SwapChainDesc, &FullscDesc, nullptr, &m_SwapChain);
-	hr = m_Factory->CreateSwapChainForHwnd(m_Device, Window, &SwapChainDesc, nullptr, nullptr, &m_SwapChain);
+
+	OutputDebugString(TEXT("CreateSwapChainForHwnd()\n"));
+
+    hr = m_Factory->CreateSwapChainForHwnd(m_Device, Window, &SwapChainDesc, &FullscDesc, nullptr, &m_SwapChain);
+	//hr = m_Factory->CreateSwapChainForHwnd(m_Device, Window, &SwapChainDesc, nullptr, nullptr, &m_SwapChain);
     if (FAILED(hr))
     {
         return ProcessFailure(m_Device, L"Failed to create window swapchain", L"Error", hr, SystemTransitionsExpectedErrors);

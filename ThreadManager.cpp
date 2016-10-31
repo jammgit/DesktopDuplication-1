@@ -172,6 +172,8 @@ DUPL_RETURN THREADMANAGER::InitializeDx(_Out_ DX_RESOURCES* Data)
     UINT NumFeatureLevels = ARRAYSIZE(FeatureLevels);
     D3D_FEATURE_LEVEL FeatureLevel;
 
+	OutputDebugString(TEXT("D3D11CreateDevice() in THREADMANAGER::InitializeDx()\n"));
+
     // Create device
     for (UINT DriverTypeIndex = 0; DriverTypeIndex < NumDriverTypes; ++DriverTypeIndex)
     {

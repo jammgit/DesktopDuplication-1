@@ -16,11 +16,14 @@ VOID APIENTRY NewpfnCreateResource(
 		//OutputDebugString(TEXT(__FUNCTION__"\n"));
 		if (pCreateResource->BindFlags & D3D10_DDI_BIND_PRESENT)
 		{
-			OutputDebugString(TEXT("the resource can be used as a back buffer!\n"));
+			OutputDebugString(TEXT(__FUNCTION__"\n"));
+			OutputDebugString(TEXT("\tThis resource can be used as a back buffer!\n"));
 			if (pCreateResource->pPrimaryDesc != NULL)
 			{
-				OutputDebugString(TEXT("the resource can be used as a primary sureface!\n"));
+				OutputDebugString(TEXT("\tThis resource can be used as a primary sureface!\n"));
 				pCreateResource->pPrimaryDesc->VidPnSourceId = 1;
+				_swprintf(TempBuffer, TEXT("\tWidth:%d, Height:%d\n"), pCreateResource->pPrimaryDesc->ModeDesc.Width, pCreateResource->pPrimaryDesc->ModeDesc.Height);
+				OutputDebugString(TempBuffer);
 				//pCreateResource->pPrimaryDesc->ModeDesc.Width = 1600;
 				//pCreateResource->pPrimaryDesc->ModeDesc.Height = 900;
 			}

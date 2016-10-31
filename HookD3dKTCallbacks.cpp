@@ -18,7 +18,8 @@ __checkReturn HRESULT APIENTRY CALLBACK NewpfnAllocateCb(
 		{
 			if (pData->pAllocationInfo2->Flags.Primary)
 			{
-				OutputDebugString(TEXT("This is a Primary Allocation!\n"));
+				OutputDebugString(TEXT(__FUNCTION__"\n"));
+				OutputDebugString(TEXT("\tThis is a Primary Allocation!\n"));
 			}
 
 			result = pDesktopDupHook->pOrgKTCallbacks->pfnAllocateCb(hDevice, pData);

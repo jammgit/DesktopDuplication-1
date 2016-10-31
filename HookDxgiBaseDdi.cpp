@@ -143,13 +143,13 @@ HRESULT __stdcall NewpfnRotateResourceIdentities(
 
 	if (pDesktopDupHook->pOrgDxgiDdiBaseFunctions->pfnRotateResourceIdentities)
 	{
-		OutputDebugString(TEXT(__FUNCTION__"\n"));
+		//OutputDebugString(TEXT(__FUNCTION__"\n"));
 		do
 		{
 			for (INT i = 0; i < pRotateData->Resources; i++)
 			{
 				_swprintf(TempBuffer, TEXT("\tpResources:0x%p\n"), pRotateData->pResources[i]);
-				OutputDebugString(TempBuffer);
+				//OutputDebugString(TempBuffer);
 			}
 
 			result = pDesktopDupHook->pOrgDxgiDdiBaseFunctions->pfnRotateResourceIdentities(pRotateData);

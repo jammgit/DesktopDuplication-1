@@ -273,9 +273,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
                            nullptr, nullptr, hInstance, nullptr);
 #else
 	WindowHandle = CreateWindowW(L"ddasample", L"DXGI desktop duplication sample",
-		WS_POPUP,
-		1920, 0,
-		1920, 1080,
+		WS_OVERLAPPEDWINDOW,
+		0, 0,
+		Width, Height,
 		nullptr, nullptr, hInstance, nullptr);
 #endif
     if (!WindowHandle)
@@ -470,7 +470,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case WM_SIZE:
         {
             // Tell output manager that window size has changed
-            //OutMgr.WindowResize();
+            OutMgr.WindowResize();
             break;
         }
         default:
