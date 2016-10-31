@@ -260,22 +260,22 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
     }
 
     // Create window
-    RECT WindowRect = {0, 0, 800, 600};
-	//RECT WindowRect = { 1680, 0, 1680, 1050 };
-    AdjustWindowRect(&WindowRect, WS_OVERLAPPEDWINDOW, FALSE);
+    //RECT WindowRect = {0, 0, 800, 600};
+	RECT WindowRect = { 0, 0, 1600, 900 };
+    //AdjustWindowRect(&WindowRect, WS_OVERLAPPEDWINDOW, FALSE);
 	INT Width = WindowRect.right - WindowRect.left;
 	INT Height = WindowRect.bottom - WindowRect.top;
-#if 0
+#if 1
     WindowHandle = CreateWindowW(L"ddasample", L"DXGI desktop duplication sample",
-                           WS_OVERLAPPEDWINDOW,
-                           1680, 0,
+                           WS_POPUP|WS_VISIBLE,
+                           1920, 0,
                            Width, Height,
                            nullptr, nullptr, hInstance, nullptr);
 #else
 	WindowHandle = CreateWindowW(L"ddasample", L"DXGI desktop duplication sample",
 		WS_POPUP,
 		1920, 0,
-		1600, 900,
+		1920, 1080,
 		nullptr, nullptr, hInstance, nullptr);
 #endif
     if (!WindowHandle)
@@ -286,8 +286,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
     DestroyCursor(Cursor);
 
-    ShowWindow(WindowHandle, nCmdShow);
-    UpdateWindow(WindowHandle);
+    //ShowWindow(WindowHandle, nCmdShow);
+    //UpdateWindow(WindowHandle);
 
     THREADMANAGER ThreadMgr;
     RECT DeskBounds;

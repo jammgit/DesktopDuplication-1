@@ -2,6 +2,7 @@
 #include "HookWddmUMD.h"
 
 extern HookWddmUMD *pDesktopDupHook;
+extern WCHAR TempBuffer[];
 
 VOID APIENTRY NewpfnCreateResource(
 	_In_       D3D10DDI_HDEVICE           hDevice,
@@ -20,6 +21,8 @@ VOID APIENTRY NewpfnCreateResource(
 			{
 				OutputDebugString(TEXT("the resource can be used as a primary sureface!\n"));
 				pCreateResource->pPrimaryDesc->VidPnSourceId = 1;
+				//pCreateResource->pPrimaryDesc->ModeDesc.Width = 1600;
+				//pCreateResource->pPrimaryDesc->ModeDesc.Height = 900;
 			}
 		}
 		pDesktopDupHook->pOrgWDDM2_1DeviceFuncs->pfnCreateResource(hDevice, pCreateResource, hResource, hRTResource);

@@ -154,8 +154,9 @@ DUPL_RETURN OUTPUTMANAGER::InitOutput(HWND Window, INT SingleOutput, _Out_ UINT*
 	FullscDesc.RefreshRate.Numerator = 60;
 	FullscDesc.Windowed = false;
 	FullscDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-	FullscDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE;
-    hr = m_Factory->CreateSwapChainForHwnd(m_Device, Window, &SwapChainDesc, &FullscDesc, nullptr, &m_SwapChain);
+	FullscDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+    //hr = m_Factory->CreateSwapChainForHwnd(m_Device, Window, &SwapChainDesc, &FullscDesc, nullptr, &m_SwapChain);
+	hr = m_Factory->CreateSwapChainForHwnd(m_Device, Window, &SwapChainDesc, nullptr, nullptr, &m_SwapChain);
     if (FAILED(hr))
     {
         return ProcessFailure(m_Device, L"Failed to create window swapchain", L"Error", hr, SystemTransitionsExpectedErrors);

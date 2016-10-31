@@ -11,11 +11,12 @@ HRESULT NewpfnPresentCbDXGI(
 {
 	HRESULT result = S_OK;
 
+	//OutputDebugString(TEXT(__FUNCTION__"\n"));
+
 	if (pDesktopDupHook->pOrgDxgiBaseCallbacks->pfnPresentCb)
 	{
-		OutputDebugString(TEXT(__FUNCTION__"\n"));
 		_swprintf(TempBuffer, TEXT("\thDevice:0x%p, hContext:0x%p, DxgiContext:0x%p, srcAllocation:0x%X\n"), hDevice, pPresentData->hContext, pPresentData->pDXGIContext, pPresentData->hSrcAllocation);
-		OutputDebugString(TempBuffer);
+		//OutputDebugString(TempBuffer);
 		do
 		{
 			result = pDesktopDupHook->pOrgDxgiBaseCallbacks->pfnPresentCb(hDevice, pPresentData);
@@ -55,11 +56,11 @@ HRESULT __stdcall NewpfnPresent1(
 
 	if (pDesktopDupHook->pOrgDxgiDdiBaseFunctions->pfnPresent1)
 	{
-		OutputDebugString(TEXT(__FUNCTION__"\n"));
+		//OutputDebugString(TEXT(__FUNCTION__"\n"));
 		for (UINT i = 0; i < pPresentData->SurfacesToPresent; i++)
 		{
 			_swprintf(TempBuffer, TEXT("\thDevice:0x%p, DxgiContext:0x%p, SurefaceToPresent:0x%p, Flag:0x%X\n"), pPresentData->hDevice, pPresentData->pDXGIContext, pPresentData->phSurfacesToPresent[i], pPresentData->Flags.Value);
-			OutputDebugString(TempBuffer);
+			//OutputDebugString(TempBuffer);
 		}
 		do
 		{
