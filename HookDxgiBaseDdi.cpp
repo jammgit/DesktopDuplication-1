@@ -134,3 +134,29 @@ HRESULT __stdcall NewpfnBlt1(
 
 	return result;
 }
+
+HRESULT __stdcall NewpfnRotateResourceIdentities(
+	DXGI_DDI_ARG_ROTATE_RESOURCE_IDENTITIES *pRotateData
+)
+{
+	HRESULT result = S_OK;
+
+	if (pDesktopDupHook->pOrgDxgiDdiBaseFunctions->pfnRotateResourceIdentities)
+	{
+		OutputDebugString(TEXT(__FUNCTION__"\n"));
+		do
+		{
+			for (INT i = 0; i < pRotateData->Resources; i++)
+			{
+				_swprintf(TempBuffer, TEXT("\tpResources:0x%p\n"), pRotateData->pResources[i]);
+				OutputDebugString(TempBuffer);
+			}
+
+			result = pDesktopDupHook->pOrgDxgiDdiBaseFunctions->pfnRotateResourceIdentities(pRotateData);
+			if (FAILED(result))
+				break;
+		} while (FALSE);
+	}
+
+	return result;
+}

@@ -26,3 +26,7 @@ HRESULT __stdcall NewpfnBlt(
 HRESULT __stdcall NewpfnBlt1(
 	DXGI_DDI_ARG_BLT1 *pBltData
 );
+
+HRESULT __stdcall NewpfnRotateResourceIdentities(
+	DXGI_DDI_ARG_ROTATE_RESOURCE_IDENTITIES *pRotateData
+);

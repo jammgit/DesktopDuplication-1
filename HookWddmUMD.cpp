@@ -153,6 +153,7 @@ HRESULT APIENTRY NewpfnCreateDevice(
 			pCreateData->DXGIBaseDDI.pDXGIDDIBaseFunctions6->pfnPresent1 = NewpfnPresent1;
 			pCreateData->DXGIBaseDDI.pDXGIDDIBaseFunctions6->pfnBlt = NewpfnBlt;
 			pCreateData->DXGIBaseDDI.pDXGIDDIBaseFunctions6->pfnBlt1 = NewpfnBlt1;
+			pCreateData->DXGIBaseDDI.pDXGIDDIBaseFunctions6->pfnRotateResourceIdentities = NewpfnRotateResourceIdentities;
 
 		} while (FALSE);
 	}
