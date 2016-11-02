@@ -11,12 +11,12 @@ HRESULT NewpfnPresentCbDXGI(
 {
 	HRESULT result = S_OK;
 
-	//OutputDebugString(TEXT(__FUNCTION__"\n"));
+	OutputDebugString(TEXT(__FUNCTION__"\n"));
 
 	if (pDesktopDupHook->pOrgDxgiBaseCallbacks->pfnPresentCb)
 	{
 		_swprintf(TempBuffer, TEXT("\thDevice:0x%p, hContext:0x%p, DxgiContext:0x%p, srcAllocation:0x%X\n"), hDevice, pPresentData->hContext, pPresentData->pDXGIContext, pPresentData->hSrcAllocation);
-		//OutputDebugString(TempBuffer);
+		OutputDebugString(TempBuffer);
 		do
 		{
 			result = pDesktopDupHook->pOrgDxgiBaseCallbacks->pfnPresentCb(hDevice, pPresentData);
@@ -56,11 +56,11 @@ HRESULT __stdcall NewpfnPresent1(
 
 	if (pDesktopDupHook->pOrgDxgiDdiBaseFunctions->pfnPresent1)
 	{
-		//OutputDebugString(TEXT(__FUNCTION__"\n"));
+		OutputDebugString(TEXT(__FUNCTION__"\n"));
 		for (UINT i = 0; i < pPresentData->SurfacesToPresent; i++)
 		{
 			_swprintf(TempBuffer, TEXT("\thDevice:0x%p, DxgiContext:0x%p, SurefaceToPresent:0x%p, Flag:0x%X\n"), pPresentData->hDevice, pPresentData->pDXGIContext, pPresentData->phSurfacesToPresent[i], pPresentData->Flags.Value);
-			//OutputDebugString(TempBuffer);
+			OutputDebugString(TempBuffer);
 		}
 		do
 		{
@@ -143,13 +143,13 @@ HRESULT __stdcall NewpfnRotateResourceIdentities(
 
 	if (pDesktopDupHook->pOrgDxgiDdiBaseFunctions->pfnRotateResourceIdentities)
 	{
-		//OutputDebugString(TEXT(__FUNCTION__"\n"));
+		OutputDebugString(TEXT(__FUNCTION__"\n"));
 		do
 		{
 			for (INT i = 0; i < pRotateData->Resources; i++)
 			{
-				_swprintf(TempBuffer, TEXT("\tpResources:0x%p\n"), pRotateData->pResources[i]);
-				//OutputDebugString(TempBuffer);
+				_swprintf(TempBuffer, TEXT("\thDevice£º0x%p, pResources:0x%p\n"), pRotateData->hDevice, pRotateData->pResources[i]);
+				OutputDebugString(TempBuffer);
 			}
 
 			result = pDesktopDupHook->pOrgDxgiDdiBaseFunctions->pfnRotateResourceIdentities(pRotateData);
