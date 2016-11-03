@@ -26,9 +26,12 @@ public:
 	DXGI1_5_DDI_BASE_FUNCTIONS *pOrgDxgiDdiBaseFunctions;
 
 	D3D10DDI_HRTDEVICE hRTDevice;
+	BOOLEAN KMDrvExist;
+	D3DKMT_HANDLE PrimaryAllocations[8];
 
 private:
 	HMODULE hUserModeDriver;
+	HANDLE hSeanKMDevice;
 	HOOK_TRACE_INFO Hook = { NULL };
 	ULONG ACLEntries[1] = { 0 };
 };

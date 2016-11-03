@@ -57,6 +57,25 @@ BOOLEAN HookWddmUMD::Initialize()
 		pOrgDxgiBaseCallbacks = (DXGI_DDI_BASE_CALLBACKS*)GlobalAlloc(GPTR, sizeof(DXGI_DDI_BASE_CALLBACKS));
 		pOrgDxgiDdiBaseFunctions = (DXGI1_5_DDI_BASE_FUNCTIONS*)GlobalAlloc(GPTR, sizeof(DXGI1_5_DDI_BASE_FUNCTIONS));
 
+		hSeanKMDevice = INVALID_HANDLE_VALUE;
+		hSeanKMDevice = CreateFile(
+			WDM_SEAN_DOS_NAME,
+			0,
+			FILE_SHARE_READ | FILE_SHARE_WRITE,
+			NULL,
+			OPEN_EXISTING,
+			0,
+			NULL);
+
+		if (hSeanKMDevice == INVALID_HANDLE_VALUE)
+		{
+			KMDrvExist = FALSE;
+		}
+		else
+		{
+			KMDrvExist = TRUE;
+		}
+
 		result = TRUE;
 
 	} while (FALSE);

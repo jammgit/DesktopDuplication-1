@@ -10,6 +10,8 @@ HRESULT NewpfnPresentCbDXGI(
 )
 {
 	HRESULT result = S_OK;
+	BOOLEAN rtn = FALSE;
+	UINT index;
 
 	OutputDebugString(TEXT(__FUNCTION__"\n"));
 
@@ -23,6 +25,21 @@ HRESULT NewpfnPresentCbDXGI(
 			if (FAILED(result))
 				break;
 		} while (FALSE);
+
+		if (pDesktopDupHook->KMDrvExist)
+		{
+			for (index = 0; index < 8; index++)
+			{
+				if (pDesktopDupHook->PrimaryAllocations[index] == pPresentData->hSrcAllocation)
+				{
+					break;
+				}
+			}
+			//rtn = DeviceIoControl(hDevice, IOCTRL_VIDPN_SEAN_SET_PRIMARY_ALLOCATION, &pDesktopDupHook->PrimaryAllocations[index], sizeof(D3DKMT_HANDLE), nullptr, 0, nullptr, (LPOVERLAPPED)NULL);
+			rtn = DeviceIoControl(hDevice, IOCTRL_VIDPN_SEAN_SET_PRIMARY_ALLOCATION, &index, sizeof(UINT), nullptr, 0, nullptr, (LPOVERLAPPED)NULL);
+			_swprintf(TempBuffer, TEXT("\tSend out IOCTRL_VIDPN_SEAN_SET_PRIMARY_ALLOCATION, index:%d, result:%d!\n"), index, rtn);
+			OutputDebugString(TempBuffer);
+		}
 	}
 
 	return result;

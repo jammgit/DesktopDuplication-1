@@ -3,7 +3,8 @@
 
 extern HookWddmUMD *pDesktopDupHook;
 extern WCHAR TempBuffer[];
-
+PSean_PrivateDriverData pMyDrvData;
+UINT8 PrimaryCount = 0;
 __checkReturn HRESULT APIENTRY CALLBACK NewpfnAllocateCb(
 	_In_    HANDLE            hDevice,
 	_Inout_ D3DDDICB_ALLOCATE *pData
@@ -18,12 +19,34 @@ __checkReturn HRESULT APIENTRY CALLBACK NewpfnAllocateCb(
 		{
 			if (pData->pAllocationInfo2->Flags.Primary)
 			{
-				OutputDebugString(TEXT(__FUNCTION__"\tThis is a Primary Allocation!\n"));
+				if (pDesktopDupHook->KMDrvExist)
+				{
+					pMyDrvData = (PSean_PrivateDriverData)GlobalAlloc(GPTR, sizeof(Sean_PrivateDriverData) + pData->pAllocationInfo2->PrivateDriverDataSize);
+					pMyDrvData->IsPrimary = 1;
+					pMyDrvData->Tag = (HANDLE)0xABCD1234ABCD1234;
+					pMyDrvData->DataSize = sizeof(Sean_PrivateDriverData) + pData->pAllocationInfo2->PrivateDriverDataSize;
+					CopyMemory(&pMyDrvData->pOrgPrivateDriverData, pData->pAllocationInfo2->pPrivateDriverData, pData->pAllocationInfo2->PrivateDriverDataSize);
+					pMyDrvData->OrgPrivateDriverDataSize = pData->pAllocationInfo2->PrivateDriverDataSize;
+					pMyDrvData->SlotNum = PrimaryCount % 8;
+
+					pData->pAllocationInfo2->pPrivateDriverData = (PVOID)&pMyDrvData;
+					pData->pAllocationInfo2->PrivateDriverDataSize = pMyDrvData->DataSize;
+				}
+				_swprintf(TempBuffer, TEXT(__FUNCTION__"\tThis is a Primary Allocation! PrimaryCount:%d\n"), PrimaryCount);
+				OutputDebugString(TempBuffer);
 			}
 
 			result = pDesktopDupHook->pOrgKTCallbacks->pfnAllocateCb(hDevice, pData);
 			if (FAILED(result))
 				break;
+
+			if (pData->pAllocationInfo2->Flags.Primary && pDesktopDupHook->KMDrvExist)
+			{
+				CopyMemory(pData->pAllocationInfo2->pPrivateDriverData, &pMyDrvData->pOrgPrivateDriverData, pData->pAllocationInfo2->PrivateDriverDataSize);
+				pData->pAllocationInfo2->PrivateDriverDataSize = pMyDrvData->OrgPrivateDriverDataSize;
+				pDesktopDupHook->PrimaryAllocations[PrimaryCount % 8] = pData->pAllocationInfo2->hAllocation;
+				PrimaryCount++;
+			}
 
 			if (pData->pAllocationInfo2->Flags.Primary)
 			{
