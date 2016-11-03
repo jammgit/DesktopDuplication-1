@@ -260,8 +260,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
     }
 
     // Create window
-    //RECT WindowRect = {0, 0, 800, 600};
-	RECT WindowRect = { 0, 0, 1600, 900 };
+    RECT WindowRect = {0, 0, 1920, 1080};
+	//RECT WindowRect = { 0, 0, 1600, 900 };
     //AdjustWindowRect(&WindowRect, WS_OVERLAPPEDWINDOW, FALSE);
 	INT Width = WindowRect.right - WindowRect.left;
 	INT Height = WindowRect.bottom - WindowRect.top;
@@ -470,7 +470,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case WM_SIZE:
         {
             // Tell output manager that window size has changed
-            OutMgr.WindowResize();
+            //OutMgr.WindowResize();
             break;
         }
         default:

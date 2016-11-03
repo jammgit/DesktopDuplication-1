@@ -48,6 +48,8 @@ HRESULT __stdcall NewpfnPresent(
 	return result;
 }
 
+DWORD64 Frame_Count = 0;
+
 HRESULT __stdcall NewpfnPresent1(
 	DXGI_DDI_ARG_PRESENT1 *pPresentData
 )
@@ -59,7 +61,12 @@ HRESULT __stdcall NewpfnPresent1(
 		OutputDebugString(TEXT(__FUNCTION__"\n"));
 		for (UINT i = 0; i < pPresentData->SurfacesToPresent; i++)
 		{
-			_swprintf(TempBuffer, TEXT("\thDevice:0x%p, DxgiContext:0x%p, SurefaceToPresent:0x%p, Flag:0x%X\n"), pPresentData->hDevice, pPresentData->pDXGIContext, pPresentData->phSurfacesToPresent[i], pPresentData->Flags.Value);
+			_swprintf(TempBuffer, TEXT("\tFrame Count:%d, hDevice:0x%p, DxgiContext:0x%p, SurefaceToPresent:0x%p, Flag:0x%X\n"),
+				Frame_Count++,
+				pPresentData->hDevice, 
+				pPresentData->pDXGIContext, 
+				pPresentData->phSurfacesToPresent[i], 
+				pPresentData->Flags.Value);
 			OutputDebugString(TempBuffer);
 		}
 		do

@@ -18,8 +18,7 @@ __checkReturn HRESULT APIENTRY CALLBACK NewpfnAllocateCb(
 		{
 			if (pData->pAllocationInfo2->Flags.Primary)
 			{
-				OutputDebugString(TEXT(__FUNCTION__"\n"));
-				OutputDebugString(TEXT("\tThis is a Primary Allocation!\n"));
+				OutputDebugString(TEXT(__FUNCTION__"\tThis is a Primary Allocation!\n"));
 			}
 
 			result = pDesktopDupHook->pOrgKTCallbacks->pfnAllocateCb(hDevice, pData);
@@ -28,7 +27,7 @@ __checkReturn HRESULT APIENTRY CALLBACK NewpfnAllocateCb(
 
 			if (pData->pAllocationInfo2->Flags.Primary)
 			{
-				_swprintf(TempBuffer, TEXT("\thAllocation:0x%p, VidpnSourceId:0x%X\n"), pData->pAllocationInfo2->hAllocation, pData->pAllocationInfo2->VidPnSourceId);
+				_swprintf(TempBuffer, TEXT(__FUNCTION__"\thAllocation:0x%p, VidpnSourceId:0x%X\n"), pData->pAllocationInfo2->hAllocation, pData->pAllocationInfo2->VidPnSourceId);
 				OutputDebugString(TempBuffer);
 			}
 		} while (FALSE);
@@ -90,7 +89,7 @@ __checkReturn HRESULT APIENTRY CALLBACK NewpfnRenderCb(
 
 	if (pDesktopDupHook->pOrgKTCallbacks->pfnRenderCb)
 	{
-		OutputDebugString(TEXT(__FUNCTION__"\n"));
+		//OutputDebugString(TEXT(__FUNCTION__"\n"));
 		do
 		{
 			result = pDesktopDupHook->pOrgKTCallbacks->pfnRenderCb(hDevice, pData);

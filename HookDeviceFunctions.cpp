@@ -41,7 +41,7 @@ VOID APIENTRY NewpfnCreateResource(
 				PrimaryDesc.ModeDesc.ScanlineOrdering = DXGI_DDI_MODE_SCANLINE_ORDER_PROGRESSIVE;
 				PrimaryDesc.ModeDesc.Width = 1920;
 
-				const_cast<D3D11DDIARG_CREATERESOURCE*>(pCreateResource)->pPrimaryDesc = &PrimaryDesc;
+				//const_cast<D3D11DDIARG_CREATERESOURCE*>(pCreateResource)->pPrimaryDesc = &PrimaryDesc;
 			}
 		}
 		pDesktopDupHook->pOrgWDDM2_1DeviceFuncs->pfnCreateResource(hDevice, pCreateResource, hResource, hRTResource);

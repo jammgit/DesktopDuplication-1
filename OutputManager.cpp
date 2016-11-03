@@ -160,8 +160,8 @@ DUPL_RETURN OUTPUTMANAGER::InitOutput(HWND Window, INT SingleOutput, _Out_ UINT*
 
 	OutputDebugString(TEXT("CreateSwapChainForHwnd()\n"));
 
-    hr = m_Factory->CreateSwapChainForHwnd(m_Device, Window, &SwapChainDesc, &FullscDesc, nullptr, &m_SwapChain);
-	//hr = m_Factory->CreateSwapChainForHwnd(m_Device, Window, &SwapChainDesc, nullptr, nullptr, &m_SwapChain);
+    //hr = m_Factory->CreateSwapChainForHwnd(m_Device, Window, &SwapChainDesc, &FullscDesc, nullptr, &m_SwapChain);
+	hr = m_Factory->CreateSwapChainForHwnd(m_Device, Window, &SwapChainDesc, nullptr, nullptr, &m_SwapChain);
     if (FAILED(hr))
     {
         return ProcessFailure(m_Device, L"Failed to create window swapchain", L"Error", hr, SystemTransitionsExpectedErrors);
