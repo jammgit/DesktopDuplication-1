@@ -58,6 +58,7 @@ BOOLEAN HookWddmUMD::Initialize()
 		pOrgDxgiDdiBaseFunctions = (DXGI1_5_DDI_BASE_FUNCTIONS*)GlobalAlloc(GPTR, sizeof(DXGI1_5_DDI_BASE_FUNCTIONS));
 
 		hSeanKMDevice = INVALID_HANDLE_VALUE;
+		KMDrvExist = FALSE;
 		hSeanKMDevice = CreateFile(
 			WDM_SEAN_DOS_NAME,
 			0,
@@ -92,6 +93,11 @@ void HookWddmUMD::Cleanup()
 	GlobalFree(pOrgWDDM2_1DeviceFuncs);
 	GlobalFree(pOrgDxgiBaseCallbacks);
 	GlobalFree(pOrgDxgiDdiBaseFunctions);
+
+	if (hSeanKMDevice != INVALID_HANDLE_VALUE)
+	{
+		CloseHandle(hSeanKMDevice);
+	}
 
 	LhSetExclusiveACL(ACLEntries, 1, &Hook);
 	LhUninstallHook(&Hook);

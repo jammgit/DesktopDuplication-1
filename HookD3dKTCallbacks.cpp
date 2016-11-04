@@ -11,7 +11,7 @@ __checkReturn HRESULT APIENTRY CALLBACK NewpfnAllocateCb(
 )
 {
 	HRESULT result = S_OK;
-
+	PVOID pOrgDataAddress = NULL;
 	if (pDesktopDupHook->pOrgKTCallbacks->pfnAllocateCb)
 	{
 		//OutputDebugString(TEXT(__FUNCTION__"\n"));
@@ -29,7 +29,8 @@ __checkReturn HRESULT APIENTRY CALLBACK NewpfnAllocateCb(
 					pMyDrvData->OrgPrivateDriverDataSize = pData->pAllocationInfo2->PrivateDriverDataSize;
 					pMyDrvData->SlotNum = PrimaryCount % 8;
 
-					pData->pAllocationInfo2->pPrivateDriverData = (PVOID)&pMyDrvData;
+					pOrgDataAddress = pData->pAllocationInfo2->pPrivateDriverData;
+					pData->pAllocationInfo2->pPrivateDriverData = (PVOID)pMyDrvData;
 					pData->pAllocationInfo2->PrivateDriverDataSize = pMyDrvData->DataSize;
 				}
 				_swprintf(TempBuffer, TEXT(__FUNCTION__"\tThis is a Primary Allocation! PrimaryCount:%d\n"), PrimaryCount);
@@ -42,9 +43,10 @@ __checkReturn HRESULT APIENTRY CALLBACK NewpfnAllocateCb(
 
 			if (pData->pAllocationInfo2->Flags.Primary && pDesktopDupHook->KMDrvExist)
 			{
-				CopyMemory(pData->pAllocationInfo2->pPrivateDriverData, &pMyDrvData->pOrgPrivateDriverData, pData->pAllocationInfo2->PrivateDriverDataSize);
+				CopyMemory(pOrgDataAddress, &pMyDrvData->pOrgPrivateDriverData, pMyDrvData->OrgPrivateDriverDataSize);
 				pData->pAllocationInfo2->PrivateDriverDataSize = pMyDrvData->OrgPrivateDriverDataSize;
 				pDesktopDupHook->PrimaryAllocations[PrimaryCount % 8] = pData->pAllocationInfo2->hAllocation;
+				GlobalFree(pMyDrvData);
 				PrimaryCount++;
 			}
 
