@@ -3,7 +3,7 @@
 
 extern HookWddmUMD *pDesktopDupHook;
 extern WCHAR TempBuffer[];
-PSean_PrivateDriverData pMyDrvData;
+PSean_PrivateDriverData pMyDrvData = NULL;
 UINT8 PrimaryCount = 0;
 __checkReturn HRESULT APIENTRY CALLBACK NewpfnAllocateCb(
 	_In_    HANDLE            hDevice,
@@ -44,6 +44,7 @@ __checkReturn HRESULT APIENTRY CALLBACK NewpfnAllocateCb(
 			if (pData->pAllocationInfo2->Flags.Primary && pDesktopDupHook->KMDrvExist)
 			{
 				CopyMemory(pOrgDataAddress, &pMyDrvData->pOrgPrivateDriverData, pMyDrvData->OrgPrivateDriverDataSize);
+				pData->pAllocationInfo2->pPrivateDriverData = pOrgDataAddress;
 				pData->pAllocationInfo2->PrivateDriverDataSize = pMyDrvData->OrgPrivateDriverDataSize;
 				pDesktopDupHook->PrimaryAllocations[PrimaryCount % 8] = pData->pAllocationInfo2->hAllocation;
 				GlobalFree(pMyDrvData);
