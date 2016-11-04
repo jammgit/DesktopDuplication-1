@@ -30,10 +30,9 @@ __checkReturn HRESULT APIENTRY CALLBACK NewpfnFlipOverlayCb(
 typedef struct _Sean_PrivateDriverData
 {
 	HANDLE Tag;
+	UINT OrgPrivateDriverDataSize;
 	BOOLEAN IsPrimary;
 	UINT SlotNum;
 	UINT DataSize;
-	UINT OrgPrivateDriverDataSize;
-	PVOID pOrgPrivateDriverData;
 }
 Sean_PrivateDriverData, *PSean_PrivateDriverData;
