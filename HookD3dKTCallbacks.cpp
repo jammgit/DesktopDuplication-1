@@ -52,6 +52,7 @@ __checkReturn HRESULT APIENTRY CALLBACK NewpfnAllocateCb(
 				pData->pAllocationInfo2->pPrivateDriverData = pOrgDataAddress;
 				pData->pAllocationInfo2->PrivateDriverDataSize = OrgDataSize;
 				pDesktopDupHook->PrimaryAllocations[PrimaryCount % 8] = pData->pAllocationInfo2->hAllocation;
+				ZeroMemory(pNewPrivateData, sizeof(Sean_PrivateDriverData) + pData->pAllocationInfo2->PrivateDriverDataSize);
 				GlobalFree(pNewPrivateData);
 				PrimaryCount++;
 			}
