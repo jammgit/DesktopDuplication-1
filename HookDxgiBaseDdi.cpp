@@ -35,8 +35,7 @@ HRESULT NewpfnPresentCbDXGI(
 					break;
 				}
 			}
-			//rtn = DeviceIoControl(hDevice, IOCTRL_VIDPN_SEAN_SET_PRIMARY_ALLOCATION, &pDesktopDupHook->PrimaryAllocations[index], sizeof(D3DKMT_HANDLE), nullptr, 0, nullptr, (LPOVERLAPPED)NULL);
-			rtn = DeviceIoControl(hDevice, IOCTRL_VIDPN_SEAN_SET_PRIMARY_ALLOCATION, &index, sizeof(UINT), nullptr, 0, nullptr, (LPOVERLAPPED)NULL);
+			rtn = DeviceIoControl(pDesktopDupHook->hSeanKMDevice, IOCTRL_VIDPN_SEAN_SET_PRIMARY_ALLOCATION, &index, sizeof(UINT), nullptr, 0, nullptr, (LPOVERLAPPED)NULL);
 			_swprintf(TempBuffer, TEXT("\tSend out IOCTRL_VIDPN_SEAN_SET_PRIMARY_ALLOCATION, index:%d, result:%d!\n"), index, rtn);
 			OutputDebugString(TempBuffer);
 		}

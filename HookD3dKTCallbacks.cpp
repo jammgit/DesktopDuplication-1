@@ -13,7 +13,7 @@ __checkReturn HRESULT APIENTRY CALLBACK NewpfnAllocateCb(
 	HRESULT result = S_OK;
 	PVOID pOrgDataAddress = NULL;
 	UINT OrgDataSize = 0;
-	PBYTE pNewPrivateData = NULL;
+	PVOID pNewPrivateData = NULL;
 
 	if (pDesktopDupHook->pOrgKTCallbacks->pfnAllocateCb)
 	{
@@ -24,14 +24,15 @@ __checkReturn HRESULT APIENTRY CALLBACK NewpfnAllocateCb(
 			{
 				if (pDesktopDupHook->KMDrvExist)
 				{
-					pNewPrivateData = (PBYTE)GlobalAlloc(GPTR, sizeof(Sean_PrivateDriverData) + pData->pAllocationInfo2->PrivateDriverDataSize);
+					//pNewPrivateData = (PBYTE)GlobalAlloc(GPTR, sizeof(Sean_PrivateDriverData) + pData->pAllocationInfo2->PrivateDriverDataSize);
+					pNewPrivateData = (PVOID)malloc(sizeof(Sean_PrivateDriverData) + pData->pAllocationInfo2->PrivateDriverDataSize);
 					CopyMemory(pNewPrivateData, pData->pAllocationInfo2->pPrivateDriverData, pData->pAllocationInfo2->PrivateDriverDataSize);
-					pMyDrvData = (PSean_PrivateDriverData)(pNewPrivateData + pData->pAllocationInfo2->PrivateDriverDataSize);
-					pMyDrvData->IsPrimary = 1;
+					pMyDrvData = (PSean_PrivateDriverData)((PBYTE)pNewPrivateData + pData->pAllocationInfo2->PrivateDriverDataSize);
+					//pMyDrvData->IsPrimary = 1;
 					pMyDrvData->Tag = (HANDLE)0xABCD1234ABCD1234;
 					pMyDrvData->DataSize = sizeof(Sean_PrivateDriverData) + pData->pAllocationInfo2->PrivateDriverDataSize;
 					pMyDrvData->OrgPrivateDriverDataSize = pData->pAllocationInfo2->PrivateDriverDataSize;
-					pMyDrvData->SlotNum = PrimaryCount % 8;
+					pMyDrvData->SlotNum = PrimaryCount % 4;
 
 					pOrgDataAddress = pData->pAllocationInfo2->pPrivateDriverData;
 					OrgDataSize = pData->pAllocationInfo2->PrivateDriverDataSize;
@@ -51,14 +52,17 @@ __checkReturn HRESULT APIENTRY CALLBACK NewpfnAllocateCb(
 				CopyMemory(pOrgDataAddress, pNewPrivateData, OrgDataSize);
 				pData->pAllocationInfo2->pPrivateDriverData = pOrgDataAddress;
 				pData->pAllocationInfo2->PrivateDriverDataSize = OrgDataSize;
-				pDesktopDupHook->PrimaryAllocations[PrimaryCount % 8] = pData->pAllocationInfo2->hAllocation;
-				ZeroMemory(pNewPrivateData, sizeof(Sean_PrivateDriverData) + pData->pAllocationInfo2->PrivateDriverDataSize);
-				GlobalFree(pNewPrivateData);
-				PrimaryCount++;
+				//pDesktopDupHook->PrimaryAllocations[PrimaryCount % 4] = pData->pAllocationInfo2->hAllocation;
+				//ZeroMemory(pNewPrivateData, sizeof(Sean_PrivateDriverData) + pData->pAllocationInfo2->PrivateDriverDataSize);
+				//GlobalFree(pNewPrivateData);
+				free(pNewPrivateData);
+				//PrimaryCount++;
 			}
 
 			if (pData->pAllocationInfo2->Flags.Primary)
 			{
+				pDesktopDupHook->PrimaryAllocations[PrimaryCount % 4] = pData->pAllocationInfo2->hAllocation;
+				PrimaryCount++;
 				_swprintf(TempBuffer, TEXT(__FUNCTION__"\thAllocation:0x%p, VidpnSourceId:0x%X\n"), pData->pAllocationInfo2->hAllocation, pData->pAllocationInfo2->VidPnSourceId);
 				OutputDebugString(TempBuffer);
 			}

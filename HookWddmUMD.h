@@ -27,11 +27,11 @@ public:
 
 	D3D10DDI_HRTDEVICE hRTDevice;
 	BOOLEAN KMDrvExist;
-	D3DKMT_HANDLE PrimaryAllocations[8];
+	D3DKMT_HANDLE PrimaryAllocations[4];
+	HANDLE hSeanKMDevice;
 
 private:
 	HMODULE hUserModeDriver;
-	HANDLE hSeanKMDevice;
 	HOOK_TRACE_INFO Hook = { NULL };
 	ULONG ACLEntries[1] = { 0 };
 };

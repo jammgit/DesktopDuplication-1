@@ -101,6 +101,8 @@ void HookWddmUMD::Cleanup()
 
 	LhSetExclusiveACL(ACLEntries, 1, &Hook);
 	LhUninstallHook(&Hook);
+
+	LhWaitForPendingRemovals();
 }
 
 HRESULT APIENTRY NewOpenAdapter10_2(
@@ -168,6 +170,7 @@ HRESULT APIENTRY NewpfnCreateDevice(
 				CopyMemory(pDesktopDupHook->pOrgWDDM2_1DeviceFuncs, pCreateData->pWDDM2_1DeviceFuncs, sizeof(D3DWDDM2_1DDI_DEVICEFUNCS));
 			}
 			pCreateData->pWDDM2_1DeviceFuncs->pfnCreateResource = (PFND3D11DDI_CREATERESOURCE)NewpfnCreateResource;
+			pCreateData->pWDDM2_1DeviceFuncs->pfnOpenResource = (PFND3D10DDI_OPENRESOURCE)NewpfnOpenResource;
 
 			if (pDesktopDupHook->pOrgDxgiDdiBaseFunctions->pfnSetDisplayMode != pCreateData->DXGIBaseDDI.pDXGIDDIBaseFunctions6->pfnSetDisplayMode)
 			{

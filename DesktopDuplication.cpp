@@ -400,6 +400,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
     CloseHandle(ExpectedErrorEvent);
     CloseHandle(TerminateThreadsEvent);
 
+	if (pDesktopDupHook)
+	{
+		pDesktopDupHook->Cleanup();
+		delete pDesktopDupHook;
+	}
+
     if (msg.message == WM_QUIT)
     {
         // For a WM_QUIT message we should return the wParam value
