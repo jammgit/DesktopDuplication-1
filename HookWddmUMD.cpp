@@ -8,6 +8,9 @@ HookWddmUMD *pDesktopDupHook = NULL;
 HookWddmUMD::HookWddmUMD()
 {
 	hUserModeDriver = NULL;
+	PrimaryCount = 0;
+	KMDrvExist = FALSE;
+	hSeanKMDevice = INVALID_HANDLE_VALUE;
 }
 
 
@@ -57,8 +60,6 @@ BOOLEAN HookWddmUMD::Initialize()
 		pOrgDxgiBaseCallbacks = (DXGI_DDI_BASE_CALLBACKS*)GlobalAlloc(GPTR, sizeof(DXGI_DDI_BASE_CALLBACKS));
 		pOrgDxgiDdiBaseFunctions = (DXGI1_5_DDI_BASE_FUNCTIONS*)GlobalAlloc(GPTR, sizeof(DXGI1_5_DDI_BASE_FUNCTIONS));
 
-		hSeanKMDevice = INVALID_HANDLE_VALUE;
-		KMDrvExist = FALSE;
 		hSeanKMDevice = CreateFile(
 			WDM_SEAN_DOS_NAME,
 			0,

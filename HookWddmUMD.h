@@ -29,6 +29,7 @@ public:
 	BOOLEAN KMDrvExist;
 	D3DKMT_HANDLE PrimaryAllocations[4];
 	HANDLE hSeanKMDevice;
+	UINT PrimaryCount;
 
 private:
 	HMODULE hUserModeDriver;

@@ -12,6 +12,7 @@ VOID APIENTRY NewpfnCreateResource(
 )
 {
 	DXGI_DDI_PRIMARY_DESC PrimaryDesc = { 0 };
+
 	if (pDesktopDupHook->pOrgWDDM2_1DeviceFuncs->pfnCreateResource)
 	{
 		//OutputDebugString(TEXT(__FUNCTION__"\n"));
@@ -43,9 +44,10 @@ VOID APIENTRY NewpfnCreateResource(
 
 				OutputDebugString(TEXT("\tPrimary Description is empty, create a new one!\n"));
 
-				const_cast<D3D11DDIARG_CREATERESOURCE*>(pCreateResource)->pPrimaryDesc = &PrimaryDesc;
+				//const_cast<D3D11DDIARG_CREATERESOURCE*>(pCreateResource)->pPrimaryDesc = &PrimaryDesc;
 			}
 		}
+
 		pDesktopDupHook->pOrgWDDM2_1DeviceFuncs->pfnCreateResource(hDevice, pCreateResource, hResource, hRTResource);
 	}
 }
@@ -60,7 +62,11 @@ VOID APIENTRY NewpfnOpenResource(
 	if (pDesktopDupHook->pOrgWDDM2_1DeviceFuncs->pfnOpenResource)
 	{
 		//_swprintf(TempBuffer, TEXT(__FUNCTION__"\n\thDevice:0x%p, hResource:0x%p, hRTResource:0x%p\n"),	hDevice, hResource, hRTResource);
-		_swprintf(TempBuffer, TEXT(__FUNCTION__"\n\thDevice:0x%p, NumAllocations:%d, hKMResource:0x%p\n"), hDevice, pOpenResource->NumAllocations, pOpenResource->hKMResource.handle);
+		_swprintf(TempBuffer, TEXT(__FUNCTION__"\n\thDevice:0x%p, NumAllocations:%d, hKMResource:0x%X, PrivateDriverDataSize:%d\n"),
+			hDevice,
+			pOpenResource->NumAllocations,
+			pOpenResource->hKMResource.handle,
+			pOpenResource->pOpenAllocationInfo2->PrivateDriverDataSize);
 		OutputDebugString(TempBuffer);
 
 		pDesktopDupHook->pOrgWDDM2_1DeviceFuncs->pfnOpenResource(hDevice, pOpenResource, hResource, hRTResource);

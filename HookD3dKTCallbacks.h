@@ -31,6 +31,7 @@ typedef struct _Sean_PrivateDriverData
 {
 	HANDLE Tag;
 	UINT OrgPrivateDriverDataSize;
+	PVOID pOrgPrivateDriverData;
 	HANDLE hAllocation;
 	D3DKMT_HANDLE KMTHandle;
 	HANDLE hDeviceSpecificAllocation;
